@@ -18,7 +18,7 @@ public class BurhanFess {
         System.out.println("#                                                         #");
         System.out.println("#                                                         #");
         System.out.println("###########################################################");
-
+        
         // Pertanyaan 1 - int, jika == 1 maka terwakili (+1)
         System.out.print("1. Apakah kamu sering stalking akun Burhanfess?: ");
         int jawaban1 = input.nextInt();
@@ -54,6 +54,22 @@ public class BurhanFess {
 
         input.close();
 
-        System.out.println(kodeVibe);
+        // Menafsirkan kodeVibe
+        System.out.println("-----------------------------------------------------------");
+        System.out.println("Hasil Penilaian BurhanFess kamu:");
+
+        if (kodeVibe >= 0 && kodeVibe <= 5) {
+            System.out.println("Kamu tipe 'pengagum diam-diam'. MenFess-mu jarang, tapi kalau muncul bikin kaget.");
+        } else if (kodeVibe <= 10) {
+            System.out.println("Kamu tipe 'semi-aktif'. Kadang muncul dengan kode, kadang ngilang.");
+        } else if (kodeVibe <= 15) {
+            System.out.println("Kamu tipe 'suka bikin penasaran'. MenFess-mu bikin orang mikir, tapi kadang bikin bingung.");
+        } else if (kodeVibe <= 20) {
+            System.out.println("Kamu tipe 'suka bikin drama'. MenFess-mu bikin orang penasaran, tapi terlalu banyak drama.");
+        } else if (kodeVibe <= 25) {
+            System.out.println("Kamu tipe 'suka bikin orang mikir'. MenFess-mu bikin orang penasaran, tapi kadang bikin mereka mikir.");
+        } else {
+            System.out.println("Kamu tipe 'rahasia'. MenFess-mu jarang muncul, tapi kalau muncul bikin orang penasaran siapa yang kirim.");
+        }
     }
 }
