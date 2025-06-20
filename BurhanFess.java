@@ -19,9 +19,17 @@ public class BurhanFess {
         System.out.println("#                                                         #");
         System.out.println("#                                                         #");
         System.out.println("###########################################################");
+        System.out.println("------------------------- PANDUAN -------------------------");
+        System.out
+                .println("Program ini adalah kuis interaktif yang akan menebak kode kode vibe-mu di dunia BurhanFess.");
+        System.out.println("Kamu akan menjawab 5 pertanyaan:");
+        System.out.println("- Jawaban berupa angka (1 = ya, 0 = tidak) atau teks ('ya', 'tidak')");
+        System.out.println("- Jawaban memengaruhi skor kamu (kodeVibe)");
+        System.out.println("Hasil akan diubah menjadi tipe vibe yang cocok denganmu!");
+        System.out.println("-----------------------------------------------------------");
 
         // Pertanyaan 1 - int, jika == 1 maka terwakili (+1)
-        System.out.print("1. Apakah kamu sering stalking akun Burhanfess?: ");
+        System.out.print("1. Apakah kamu sering stalking akun Burhanfess? (angka): ");
         int jawaban1 = input.nextInt();
         if (jawaban1 == 1)
             kodeVibe += 1;
@@ -29,14 +37,14 @@ public class BurhanFess {
         input.nextLine(); // Buang newline
 
         // Pertanyaan 2 - String, case-insensitive, "ya" = +2
-        System.out.print("2. Apakah kamu pernah mengirim fess?: ");
+        System.out.print("2. Apakah kamu pernah mengirim fess? (teks): ");
         String jawaban2 = input.nextLine();
         if (jawaban2.equalsIgnoreCase("ya")) {
             kodeVibe += 2;
         }
 
         // Pertanyaan 3 - int, jika == 1 maka terwakili (+4)
-        System.out.print("3. Apakah kamu pernah gagal move on karena fess?: ");
+        System.out.print("3. Apakah kamu pernah gagal move on karena fess? (angka): ");
         int jawaban3 = input.nextInt();
         if (jawaban3 == 1)
             kodeVibe += 4;
@@ -44,19 +52,19 @@ public class BurhanFess {
         input.nextLine(); // newline lagi
 
         // Pertanyaan 4 - String, case-sensitive, hanya "ya" huruf kecil (+8)
-        System.out.print("4. Apakah kamu punya alter khusus buat Burhanfess?: ");
+        System.out.print("4. Apakah kamu punya alter khusus buat Burhanfess? (teks): ");
         String jawaban4 = input.nextLine();
         if (jawaban4.equals("ya")) {
             kodeVibe += 8;
         }
 
         // Pertanyaan 5 - int, jika == 1 maka terwakili (+16)
-        System.out.print("5. Apakah kamu ingin mengirim fess anonim hari ini?: ");
+        System.out.print("5. Apakah kamu ingin mengirim fess anonim hari ini? (angka): ");
         int jawaban5 = input.nextInt();
         if (jawaban5 == 1)
             kodeVibe += 16;
 
-        // Menafsirkan kodeVibe
+        // Pilih mode interpretasi
         System.out.println("-----------------------------------------------------------");
         System.out.print("Pilih mode interpretasi hasil (0 = If-Else, 1 = Switch-Case): ");
         int mode = input.nextInt();
@@ -105,7 +113,7 @@ public class BurhanFess {
         // Tampilkan hasil akhir
         System.out.println(hasil + " : via " + via);
 
-        // Memilih metode pengiriman
+        // Pilih mode pengiriman
         System.out.println("-----------------------------------------------------------");
         System.out.print("Pilih mode pengiriman fess (0 = sekarang, 1 = masa depan): ");
         int modeKirim = input.nextInt();
@@ -175,8 +183,8 @@ public class BurhanFess {
     // Nama bulan manual
     public static String namaBulan(int bulan) {
         String[] nama = {
-                "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-                "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+            "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+            "Juli", "Agustus", "September", "Oktober", "November", "Desember"
         };
         return nama[bulan - 1];
     }
