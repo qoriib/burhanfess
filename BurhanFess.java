@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.time.LocalDateTime;
 
 public class BurhanFess {
     public static void main(String[] args) {
@@ -104,6 +105,79 @@ public class BurhanFess {
         // Tampilkan hasil akhir
         System.out.println(hasil + " : via " + via);
 
+        // Memilih metode pengiriman
+        System.out.println("-----------------------------------------------------------");
+        System.out.print("Pilih mode pengiriman fess (0 = sekarang, 1 = masa depan): ");
+        int modeKirim = input.nextInt();
+
+        LocalDateTime now = LocalDateTime.now();
+
+        if (modeKirim == 0) {
+            // Ambil komponen waktu sekarang
+            int tgl = now.getDayOfMonth();
+            int bln = now.getMonthValue();
+            int thn = now.getYear();
+            int jam = now.getHour();
+            int menit = now.getMinute();
+            int detik = now.getSecond();
+
+            System.out.printf("Fess dikirimkan sekarang pada %d %s %d, pukul %02d:%02d:%02d\n", tgl, namaBulan(bln),
+                    thn, jam, menit, detik);
+        } else {
+            System.out.print("Masukkan jumlah detik dari sekarang hingga fess dikirim: ");
+            int tambahDetik = input.nextInt();
+
+            // Ambil komponen waktu sekarang
+            int second = now.getSecond() + (tambahDetik % 60);
+            int minute = now.getMinute() + ((tambahDetik / 60) % 60);
+            int hour = now.getHour() + ((tambahDetik / 3600) % 24);
+            int day = now.getDayOfMonth();
+            int month = now.getMonthValue();
+            int year = now.getYear();
+
+            // Penyesuaian antar satuan waktu
+            if (second >= 60) {
+                second -= 60;
+                minute++;
+            }
+            if (minute >= 60) {
+                minute -= 60;
+                hour++;
+            }
+            if (hour >= 24) {
+                hour -= 24;
+                day++;
+            }
+
+            int[] hariPerBulan = { 31, isKabisat(year) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+
+            if (day > hariPerBulan[month - 1]) {
+                day = 1;
+                month++;
+            }
+            if (month > 12) {
+                month = 1;
+                year++;
+            }
+
+            System.out.printf("Fess dijadwalkan untuk dikirim pada %d %s %d, pukul %02d:%02d:%02d\n", day,
+                    namaBulan(month), year, hour, minute, second);
+        }
+
         input.close();
+    }
+
+    // Cek tahun kabisat
+    public static boolean isKabisat(int tahun) {
+        return (tahun % 4 == 0 && tahun % 100 != 0) || (tahun % 400 == 0);
+    }
+
+    // Nama bulan manual
+    public static String namaBulan(int bulan) {
+        String[] nama = {
+                "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+                "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+        };
+        return nama[bulan - 1];
     }
 }
