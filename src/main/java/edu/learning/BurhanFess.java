@@ -1,3 +1,5 @@
+package edu.learning;
+
 import java.util.Scanner;
 import java.time.LocalDateTime;
 
