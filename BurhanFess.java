@@ -4,17 +4,66 @@ import java.time.LocalDateTime;
 public class BurhanFess {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
+        runProgram(input);
+        input.close();
+    }
+
+    public static void runProgram(Scanner input) {
+        int totalPermainan = 0;
+        int totalKesalahan = 0;
+        boolean lanjut = true;
 
         tampilkanAsciiArt();
 
-        int kodeVibe = hitungKodeVibe(input);
-        int mode = pilihModeInterpretasi(input);
-        String hasil = interpretasiVibe(kodeVibe, mode);
-        System.out.println(hasil);
+        while (lanjut) {
+            totalPermainan++;
 
-        pilihPengiriman(input);
+            int kodeVibe = hitungKodeVibe(input);
+            int[] modeResult = getValidInput(input,
+                    "Pilih mode interpretasi hasil (0 = If-Else, 1 = Switch-Case): ",
+                    0,
+                    1);
+            int mode = modeResult[0];
+            totalKesalahan += modeResult[1];
 
-        input.close();
+            System.out.println(interpretasiVibe(kodeVibe, mode));
+
+            int[] modeKirimResult = getValidInput(input,
+                    "Pilih mode pengiriman fess (0 = sekarang, 1 = masa depan): ",
+                    0,
+                    1);
+            int modeKirim = modeKirimResult[0];
+            totalKesalahan += modeKirimResult[1];
+
+            LocalDateTime now = LocalDateTime.now();
+
+            if (modeKirim == 0) {
+                tampilkanWaktuSekarang(now);
+            } else {
+                System.out.print("Masukkan jumlah detik dari sekarang hingga fess dikirim: ");
+                int delay = input.nextInt();
+                LocalDateTime waktuKirim = calculateDelayedDateTime(now, delay);
+                System.out.printf("Fess dijadwalkan untuk dikirim pada %d %s %d, pukul %02d:%02d:%02d\n",
+                        waktuKirim.getDayOfMonth(),
+                        namaBulan(waktuKirim.getMonthValue()),
+                        waktuKirim.getYear(),
+                        waktuKirim.getHour(),
+                        waktuKirim.getMinute(),
+                        waktuKirim.getSecond());
+            }
+
+            input.nextLine();
+            System.out.print("Ingin bermain lagi? (ya/tidak): ");
+            String lagi = input.nextLine();
+            if (!lagi.equalsIgnoreCase("ya")) {
+                lanjut = false;
+            }
+        }
+
+        System.out.println("\nPermainan telah berakhir.");
+        System.out.println("Anda telah memainkan " + totalPermainan + " kali permainan.");
+        System.out.println("Ada " + totalKesalahan + " kali pilihan yang tidak sesuai.");
+        tampilkanAsciiThanks();
     }
 
     public static void tampilkanAsciiArt() {
@@ -30,6 +79,41 @@ public class BurhanFess {
         System.out.println("#                                                         #");
         System.out.println("#                                                         #");
         System.out.println("###########################################################");
+    }
+
+    public static void tampilkanAsciiThanks() {
+        System.out.println("######################################");
+        System.out.println("#                                    #");
+        System.out.println("#                                    #");
+        System.out.println("#  _____ _                 _         #");
+        System.out.println("# |_   _| |__   __ _ _ __ | | _____  #");
+        System.out.println("#   | | | '_ \\ / _` | '_ \\| |/ / __| #");
+        System.out.println("#   | | | | | | (_| | | | |   <\\__ \\ #");
+        System.out.println("#   |_| |_| |_|\\__,_|_| |_|_|\\_\\___/ #");
+        System.out.println("#                                    #");
+        System.out.println("#                                    #");
+        System.out.println("######################################");
+    }
+
+    public static int[] getValidInput(Scanner input, String prompt, int min, int max) {
+        int nilai = -1;
+        int kesalahan = 0;
+
+        while (true) {
+            System.out.print(prompt);
+            if (input.hasNextInt()) {
+                nilai = input.nextInt();
+                if (nilai >= min && nilai <= max) {
+                    break;
+                }
+            } else {
+                input.next();
+            }
+            System.out.println("Input tidak valid. Coba lagi.");
+            kesalahan++;
+        }
+
+        return new int[] { nilai, kesalahan };
     }
 
     public static int hitungKodeVibe(Scanner input) {
@@ -63,11 +147,6 @@ public class BurhanFess {
             kodeVibe += 16;
 
         return kodeVibe;
-    }
-
-    public static int pilihModeInterpretasi(Scanner input) {
-        System.out.print("Pilih mode interpretasi hasil (0 = If-Else, 1 = Switch-Case): ");
-        return input.nextInt();
     }
 
     public static String interpretasiVibe(int kodeVibe, int mode) {
@@ -113,27 +192,6 @@ public class BurhanFess {
             }
         }
         return hasil + " : via " + via;
-    }
-
-    public static void pilihPengiriman(Scanner input) {
-        System.out.print("Pilih mode pengiriman fess (0 = sekarang, 1 = masa depan): ");
-        int mode = input.nextInt();
-        LocalDateTime now = LocalDateTime.now();
-
-        if (mode == 0) {
-            tampilkanWaktuSekarang(now);
-        } else {
-            System.out.print("Masukkan jumlah detik dari sekarang hingga fess dikirim: ");
-            int delay = input.nextInt();
-            LocalDateTime waktuKirim = calculateDelayedDateTime(now, delay);
-            System.out.printf("Fess dijadwalkan untuk dikirim pada %d %s %d, pukul %02d:%02d:%02d\n",
-                    waktuKirim.getDayOfMonth(),
-                    namaBulan(waktuKirim.getMonthValue()),
-                    waktuKirim.getYear(),
-                    waktuKirim.getHour(),
-                    waktuKirim.getMinute(),
-                    waktuKirim.getSecond());
-        }
     }
 
     public static void tampilkanWaktuSekarang(LocalDateTime now) {
