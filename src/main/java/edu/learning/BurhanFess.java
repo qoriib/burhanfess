@@ -31,9 +31,9 @@ public class BurhanFess {
             System.out.println(interpretasiVibe(kodeVibe, mode));
 
             int[] modeKirimResult = getValidInput(input,
-                    "Pilih mode pengiriman fess (0 = sekarang, 1 = masa depan, 2 = simulasi antrian): ",
+                    "Pilih mode lanjutan (0 = sekarang, 1 = masa depan, 2 = simulasi antrian, 3 = analisis intensitas fess): ",
                     0,
-                    2);
+                    3);
             int modeKirim = modeKirimResult[0];
             totalKesalahan += modeKirimResult[1];
 
@@ -58,6 +58,9 @@ public class BurhanFess {
                 case 2:
                     simulasiAntrianTerjadwal(input);
                     break;
+                case 3:
+                    analisisIntensitasFess(input);
+                    break;
             }
 
             input.nextLine();
@@ -72,6 +75,36 @@ public class BurhanFess {
         System.out.println("Anda telah memainkan " + totalPermainan + " kali permainan.");
         System.out.println("Ada " + totalKesalahan + " kali pilihan yang tidak sesuai.");
         tampilkanAsciiThanks();
+    }
+
+    public static int hitungKemunculanKata(String[] kata, int index, String target) {
+        if (index >= kata.length) {
+            return 0;
+        }
+        int count = kata[index].toLowerCase().contains(target.toLowerCase()) ? 1 : 0;
+        return count + hitungKemunculanKata(kata, index + 1, target);
+    }
+
+    public static void analisisIntensitasFess(Scanner input) {
+        input.nextLine();
+        System.out.print("Masukkan isi fess yang ingin dianalisis: ");
+        String fess = input.nextLine();
+
+        String[] kata = fess.split("\\s+");
+        int kemunculan = hitungKemunculanKata(kata, 0, "burhan");
+
+        System.out.println("\n--- Hasil Analisis ---");
+        System.out.println("Jumlah kata     : " + kata.length);
+        System.out.println("Jumlah karakter : " + fess.length());
+        System.out.println("Jumlah 'burhan' : " + kemunculan);
+
+        if (kemunculan == 0) {
+            System.out.println("Intensitas: Netral");
+        } else if (kemunculan <= 2) {
+            System.out.println("Intensitas: Sedang");
+        } else {
+            System.out.println("Intensitas: Tinggi");
+        }
     }
 
     public static void simulasiAntrianTerjadwal(Scanner input) {

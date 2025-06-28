@@ -3,6 +3,7 @@ package edu.learning;
 import java.io.StringReader;
 import java.time.LocalDateTime;
 import java.util.Scanner;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
@@ -180,6 +181,83 @@ public class BurhanFessTest {
     }
 
     @Test
+    public void testHitungKemunculanKataTanpaKemunculan() {
+        String[] kata = { "halo", "dunia", "indah" };
+        int result = BurhanFess.hitungKemunculanKata(kata, 0, "burhan");
+        assertEquals(0, result);
+    }
+
+    @Test
+    public void testHitungKemunculanKataSatuKemunculan() {
+        String[] kata = { "Burhan", "fess", "indonesia" };
+        int result = BurhanFess.hitungKemunculanKata(kata, 0, "burhan");
+        assertEquals(1, result);
+    }
+
+    @Test
+    public void testHitungKemunculanKataBanyakKemunculanCaseInsensitive() {
+        String[] kata = { "burhan", "Burhanfess", "test", "BURHAN", "hello" };
+        int result = BurhanFess.hitungKemunculanKata(kata, 0, "burhan");
+        assertEquals(3, result); // "burhan", "Burhanfess", "BURHAN"
+    }
+
+    @Test
+    public void testHitungKemunculanKataEmptyArray() {
+        String[] kata = {};
+        int result = BurhanFess.hitungKemunculanKata(kata, 0, "burhan");
+        assertEquals(0, result);
+    }
+
+    @Test
+    public void testHitungKemunculanKataIndexDiTengah() {
+        String[] kata = { "a", "burhan", "b", "burhan", "c" };
+        int result = BurhanFess.hitungKemunculanKata(kata, 2, "burhan"); // mulai dari index ke-2
+        assertEquals(1, result); // hanya index 3 yang cocok
+    }
+
+    @Test
+    public void testAnalisisIntensitasFess_Netral() {
+        String input = "\nAku suka makan nasi goreng\n";
+        Scanner scanner = new Scanner(new ByteArrayInputStream(input.getBytes()));
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(output));
+
+        BurhanFess.analisisIntensitasFess(scanner);
+
+        String result = output.toString();
+        assertTrue(result.contains("Jumlah kata"));
+        assertTrue(result.contains("Intensitas: Netral"));
+    }
+
+    @Test
+    public void testAnalisisIntensitasFess_Sedang() {
+        String input = "\nburhan itu baik burhan selalu hadir\n";
+        Scanner scanner = new Scanner(new ByteArrayInputStream(input.getBytes()));
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(output));
+
+        BurhanFess.analisisIntensitasFess(scanner);
+
+        String result = output.toString();
+        assertTrue(result.contains("Jumlah 'burhan' : 2"));
+        assertTrue(result.contains("Intensitas: Sedang"));
+    }
+
+    @Test
+    public void testAnalisisIntensitasFess_Tinggi() {
+        String input = "\nburhan burhan burhan burhan\n";
+        Scanner scanner = new Scanner(new ByteArrayInputStream(input.getBytes()));
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(output));
+
+        BurhanFess.analisisIntensitasFess(scanner);
+
+        String result = output.toString();
+        assertTrue(result.contains("Jumlah 'burhan' : 4"));
+        assertTrue(result.contains("Intensitas: Tinggi"));
+    }
+
+    @Test
     public void testRunProgramLangsung() {
         String input = String.join("\n",
                 "1", // Q1
@@ -236,5 +314,17 @@ public class BurhanFessTest {
         );
         Scanner scanner = new Scanner(new StringReader(input));
         BurhanFess.runProgram(scanner);
+    }
+
+    @Test
+    public void testRunProgramAnalisisIntensitas() {
+        String input = String.join("\n",
+                "1", "ya", "1", "ya", "1",
+                "0", // if-else
+                "3", // analisis intensitas
+                "", // consume newline
+                "burhan burhan test",
+                "tidak");
+        BurhanFess.runProgram(new Scanner(new StringReader(input)));
     }
 }
