@@ -139,17 +139,84 @@ public class BurhanFessTest {
     }
 
     @Test
-    public void testRunProgramSekaliLangsungSelesai() {
+    public void testSimulasiAntrianJumlah1() {
+        String input = String.join("\n",
+                "1", // jumlah fess
+                "10" // delay
+        );
+        Scanner scanner = new Scanner(new StringReader(input));
+        BurhanFess.simulasiAntrianTerjadwal(scanner);
+    }
+
+    @Test
+    public void testSimulasiAntrianJumlah5() {
+        String input = String.join("\n",
+                "5", // jumlah fess
+                "5", "10", "15", "20", "25" // 5 delay
+        );
+        Scanner scanner = new Scanner(new StringReader(input));
+        BurhanFess.simulasiAntrianTerjadwal(scanner);
+    }
+
+    @Test
+    public void testSimulasiAntrianDenganPerbaikanJumlahTidakValid() {
+        String input = String.join("\n",
+                "0", // ❌ invalid
+                "7", // ❌ invalid
+                "3", // ✅ valid
+                "10", "20", "30");
+        Scanner scanner = new Scanner(new StringReader(input));
+        BurhanFess.simulasiAntrianTerjadwal(scanner);
+    }
+
+    @Test
+    public void testSimulasiAntrianJumlah2() {
+        String input = String.join("\n",
+                "2", // jumlah fess
+                "60", "15" // delay
+        );
+        Scanner scanner = new Scanner(new StringReader(input));
+        BurhanFess.simulasiAntrianTerjadwal(scanner);
+    }
+
+    @Test
+    public void testRunProgramLangsung() {
         String input = String.join("\n",
                 "1", // Q1
                 "ya", // Q2
                 "1", // Q3
                 "ya", // Q4
                 "1", // Q5
-                "0", // mode interpretasi
-                "1", // mode kirim (delay)
-                "120", // delay
+                "0", // interpretasi: if-else
+                "0", // mode kirim: sekarang
+                "tidak" // tidak lanjut
+        );
+        Scanner scanner = new Scanner(new StringReader(input));
+        BurhanFess.runProgram(scanner);
+    }
+
+    @Test
+    public void testRunProgramDelay() {
+        String input = String.join("\n",
+                "0", "tidak", "0", "tidak", "0", // Q1-5: no contribution
+                "1", // interpretasi: switch
+                "1", // mode kirim: delay
+                "5", // 5 detik delay
                 "tidak" // selesai
+        );
+        Scanner scanner = new Scanner(new StringReader(input));
+        BurhanFess.runProgram(scanner);
+    }
+
+    @Test
+    public void testRunProgramAntrian() {
+        String input = String.join("\n",
+                "1", "ya", "1", "ya", "1", // Q1-5
+                "0", // interpretasi: if-else
+                "2", // mode kirim: antrian
+                "3", // jumlah fess
+                "60", "15", "5", // delay fess 1-3
+                "tidak" // tidak lanjut
         );
         Scanner scanner = new Scanner(new StringReader(input));
         BurhanFess.runProgram(scanner);

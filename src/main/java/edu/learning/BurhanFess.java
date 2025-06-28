@@ -31,27 +31,33 @@ public class BurhanFess {
             System.out.println(interpretasiVibe(kodeVibe, mode));
 
             int[] modeKirimResult = getValidInput(input,
-                    "Pilih mode pengiriman fess (0 = sekarang, 1 = masa depan): ",
+                    "Pilih mode pengiriman fess (0 = sekarang, 1 = masa depan, 2 = simulasi antrian): ",
                     0,
-                    1);
+                    2);
             int modeKirim = modeKirimResult[0];
             totalKesalahan += modeKirimResult[1];
 
             LocalDateTime now = LocalDateTime.now();
 
-            if (modeKirim == 0) {
-                tampilkanWaktuSekarang(now);
-            } else {
-                System.out.print("Masukkan jumlah detik dari sekarang hingga fess dikirim: ");
-                int delay = input.nextInt();
-                LocalDateTime waktuKirim = calculateDelayedDateTime(now, delay);
-                System.out.printf("Fess dijadwalkan untuk dikirim pada %d %s %d, pukul %02d:%02d:%02d\n",
-                        waktuKirim.getDayOfMonth(),
-                        namaBulan(waktuKirim.getMonthValue()),
-                        waktuKirim.getYear(),
-                        waktuKirim.getHour(),
-                        waktuKirim.getMinute(),
-                        waktuKirim.getSecond());
+            switch (modeKirim) {
+                case 0:
+                    tampilkanWaktuSekarang(now);
+                    break;
+                case 1:
+                    System.out.print("Masukkan jumlah detik dari sekarang hingga fess dikirim: ");
+                    int delay = input.nextInt();
+                    LocalDateTime waktuKirim = calculateDelayedDateTime(now, delay);
+                    System.out.printf("Fess dijadwalkan untuk dikirim pada %d %s %d, pukul %02d:%02d:%02d\n",
+                            waktuKirim.getDayOfMonth(),
+                            namaBulan(waktuKirim.getMonthValue()),
+                            waktuKirim.getYear(),
+                            waktuKirim.getHour(),
+                            waktuKirim.getMinute(),
+                            waktuKirim.getSecond());
+                    break;
+                case 2:
+                    simulasiAntrianTerjadwal(input);
+                    break;
             }
 
             input.nextLine();
@@ -66,6 +72,99 @@ public class BurhanFess {
         System.out.println("Anda telah memainkan " + totalPermainan + " kali permainan.");
         System.out.println("Ada " + totalKesalahan + " kali pilihan yang tidak sesuai.");
         tampilkanAsciiThanks();
+    }
+
+    public static void simulasiAntrianTerjadwal(Scanner input) {
+        System.out.print("Berapa fess yang ingin dijadwalkan? (maks 5): ");
+        int jumlah = input.nextInt();
+        while (jumlah < 1 || jumlah > 5) {
+            System.out.print("Jumlah tidak valid. Masukkan angka 1 - 5: ");
+            jumlah = input.nextInt();
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+        System.out.printf("Waktu sekarang: %d %s %d, %02d:%02d:%02d\n",
+                now.getDayOfMonth(),
+                namaBulan(now.getMonthValue()),
+                now.getYear(),
+                now.getHour(),
+                now.getMinute(),
+                now.getSecond());
+
+        // Variabel delay dan waktu simpan manual
+        LocalDateTime t1 = null, t2 = null, t3 = null, t4 = null, t5 = null;
+
+        for (int i = 1; i <= jumlah; i++) {
+            System.out.printf("Masukkan delay fess #%d (detik): ", i);
+            int delay = input.nextInt();
+            LocalDateTime waktu = calculateDelayedDateTime(now, delay);
+
+            if (i == 1) {
+                t1 = waktu;
+            }
+            if (i == 2) {
+                t2 = waktu;
+            }
+            if (i == 3) {
+                t3 = waktu;
+            }
+            if (i == 4) {
+                t4 = waktu;
+            }
+            if (i == 5) {
+                t5 = waktu;
+            }
+        }
+
+        System.out.println("\nMengurutkan dan mengirimkan fess..");
+
+        for (int i = 0; i < jumlah; i++) {
+            LocalDateTime min = null;
+            int index = -1;
+
+            if (t1 != null && (min == null || t1.isBefore(min))) {
+                min = t1;
+                index = 1;
+            }
+            if (t2 != null && (min == null || t2.isBefore(min))) {
+                min = t2;
+                index = 2;
+            }
+            if (t3 != null && (min == null || t3.isBefore(min))) {
+                min = t3;
+                index = 3;
+            }
+            if (t4 != null && (min == null || t4.isBefore(min))) {
+                min = t4;
+                index = 4;
+            }
+            if (t5 != null && (min == null || t5.isBefore(min))) {
+                min = t5;
+                index = 5;
+            }
+
+            if (min != null) {
+                System.out.printf("Fess akan dikirim pada: %d %s %d, %02d:%02d:%02d\n",
+                        min.getDayOfMonth(),
+                        namaBulan(min.getMonthValue()),
+                        min.getYear(),
+                        min.getHour(),
+                        min.getMinute(),
+                        min.getSecond());
+
+                // "Hapus" entry terkecil
+                if (index == 1)
+                    t1 = null;
+                if (index == 2)
+                    t2 = null;
+                if (index == 3)
+                    t3 = null;
+                if (index == 4)
+                    t4 = null;
+                if (index == 5)
+                    t5 = null;
+            }
+        }
     }
 
     public static void tampilkanAsciiArt() {
