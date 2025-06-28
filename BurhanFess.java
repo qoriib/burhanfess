@@ -4,9 +4,20 @@ import java.time.LocalDateTime;
 public class BurhanFess {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
-        int kodeVibe = 0;
 
-        // Tampilan awal: ASCII Art
+        tampilkanAsciiArt();
+
+        int kodeVibe = hitungKodeVibe(input);
+        int mode = pilihModeInterpretasi(input);
+        String hasil = interpretasiVibe(kodeVibe, mode);
+        System.out.println(hasil);
+
+        pilihPengiriman(input);
+
+        input.close();
+    }
+
+    public static void tampilkanAsciiArt() {
         System.out.println("###########################################################");
         System.out.println("#                                                         #");
         System.out.println("#                                                         #");
@@ -19,64 +30,65 @@ public class BurhanFess {
         System.out.println("#                                                         #");
         System.out.println("#                                                         #");
         System.out.println("###########################################################");
+    }
 
-        // Pertanyaan 1
+    public static int hitungKodeVibe(Scanner input) {
+        int kodeVibe = 0;
+
         System.out.print("1. Apakah kamu sering stalking akun Burhanfess?: ");
         int jawaban1 = input.nextInt();
-        if (jawaban1 == 1) {
+        if (jawaban1 == 1)
             kodeVibe += 1;
-        }
         input.nextLine();
 
-        // Pertanyaan 2
         System.out.print("2. Apakah kamu pernah mengirim fess?: ");
         String jawaban2 = input.nextLine();
-        if (jawaban2.equalsIgnoreCase("ya")) {
+        if (jawaban2.equalsIgnoreCase("ya"))
             kodeVibe += 2;
-        }
 
-        // Pertanyaan 3
         System.out.print("3. Apakah kamu pernah gagal move on karena fess?: ");
         int jawaban3 = input.nextInt();
-        if (jawaban3 == 1) {
+        if (jawaban3 == 1)
             kodeVibe += 4;
-        }
         input.nextLine();
 
-        // Pertanyaan 4
         System.out.print("4. Apakah kamu punya alter khusus buat Burhanfess?: ");
         String jawaban4 = input.nextLine();
-        if (jawaban4.equals("ya")) {
+        if (jawaban4.equals("ya"))
             kodeVibe += 8;
-        }
 
-        // Pertanyaan 5
         System.out.print("5. Apakah kamu ingin mengirim fess anonim hari ini?: ");
         int jawaban5 = input.nextInt();
-        if (jawaban5 == 1) {
+        if (jawaban5 == 1)
             kodeVibe += 16;
-        }
 
-        // Mode interpretasi hasil
+        return kodeVibe;
+    }
+
+    public static int pilihModeInterpretasi(Scanner input) {
         System.out.print("Pilih mode interpretasi hasil (0 = If-Else, 1 = Switch-Case): ");
-        int mode = input.nextInt();
-        String hasil = "";
-        String via = "";
+        return input.nextInt();
+    }
+
+    public static String interpretasiVibe(int kodeVibe, int mode) {
+        String via;
+        String hasil;
 
         if (mode == 0) {
             via = "If-Else";
-            if (kodeVibe <= 5)
+            if (kodeVibe <= 5) {
                 hasil = "Kamu tipe 'pengagum diam-diam'. MenFess-mu jarang, tapi kalau muncul bikin kaget.";
-            else if (kodeVibe <= 10)
+            } else if (kodeVibe <= 10) {
                 hasil = "Kamu tipe 'semi-aktif'. Kadang muncul dengan kode, kadang ngilang.";
-            else if (kodeVibe <= 15)
+            } else if (kodeVibe <= 15) {
                 hasil = "Kamu tipe 'suka bikin penasaran'. MenFess-mu bikin orang mikir, tapi kadang bikin bingung.";
-            else if (kodeVibe <= 20)
+            } else if (kodeVibe <= 20) {
                 hasil = "Kamu tipe 'suka bikin drama'. MenFess-mu bikin orang penasaran, tapi terlalu banyak drama.";
-            else if (kodeVibe <= 25)
+            } else if (kodeVibe <= 25) {
                 hasil = "Kamu tipe 'suka bikin orang mikir'. MenFess-mu bikin orang penasaran, tapi kadang bikin mereka mikir.";
-            else
+            } else {
                 hasil = "Kamu tipe 'rahasia'. MenFess-mu jarang muncul, tapi kalau muncul bikin orang penasaran siapa yang kirim.";
+            }
         } else {
             via = "Switch-Case";
             switch (kodeVibe / 5) {
@@ -100,29 +112,20 @@ public class BurhanFess {
                     break;
             }
         }
+        return hasil + " : via " + via;
+    }
 
-        System.out.println(hasil + " : via " + via);
-
-        // Pengiriman fess
+    public static void pilihPengiriman(Scanner input) {
         System.out.print("Pilih mode pengiriman fess (0 = sekarang, 1 = masa depan): ");
-        int modeKirim = input.nextInt();
-
+        int mode = input.nextInt();
         LocalDateTime now = LocalDateTime.now();
 
-        if (modeKirim == 0) {
-            System.out.printf("Fess dikirimkan sekarang pada %d %s %d, pukul %02d:%02d:%02d\n",
-                    now.getDayOfMonth(),
-                    namaBulan(now.getMonthValue()),
-                    now.getYear(),
-                    now.getHour(),
-                    now.getMinute(),
-                    now.getSecond());
+        if (mode == 0) {
+            tampilkanWaktuSekarang(now);
         } else {
             System.out.print("Masukkan jumlah detik dari sekarang hingga fess dikirim: ");
-            int tambahDetik = input.nextInt();
-
-            LocalDateTime waktuKirim = calculateDelayedDateTime(now, tambahDetik);
-
+            int delay = input.nextInt();
+            LocalDateTime waktuKirim = calculateDelayedDateTime(now, delay);
             System.out.printf("Fess dijadwalkan untuk dikirim pada %d %s %d, pukul %02d:%02d:%02d\n",
                     waktuKirim.getDayOfMonth(),
                     namaBulan(waktuKirim.getMonthValue()),
@@ -131,11 +134,18 @@ public class BurhanFess {
                     waktuKirim.getMinute(),
                     waktuKirim.getSecond());
         }
-
-        input.close();
     }
 
-    // Hitung waktu kirim menggunakan loop untuk menangani delay sangat besar
+    public static void tampilkanWaktuSekarang(LocalDateTime now) {
+        System.out.printf("Fess dikirimkan sekarang pada %d %s %d, pukul %02d:%02d:%02d\n",
+                now.getDayOfMonth(),
+                namaBulan(now.getMonthValue()),
+                now.getYear(),
+                now.getHour(),
+                now.getMinute(),
+                now.getSecond());
+    }
+
     public static LocalDateTime calculateDelayedDateTime(LocalDateTime now, int delaySeconds) {
         int second = now.getSecond() + (delaySeconds % 60);
         int minute = now.getMinute() + ((delaySeconds / 60) % 60);
@@ -210,18 +220,18 @@ public class BurhanFess {
 
     public static String namaBulan(int bulan) {
         String[] nama = {
-            "Januari",
-            "Februari",
-            "Maret",
-            "April",
-            "Mei",
-            "Juni",
-            "Juli",
-            "Agustus",
-            "September",
-            "Oktober",
-            "November",
-            "Desember"
+                "Januari",
+                "Februari",
+                "Maret",
+                "April",
+                "Mei",
+                "Juni",
+                "Juli",
+                "Agustus",
+                "September",
+                "Oktober",
+                "November",
+                "Desember"
         };
         return nama[bulan - 1];
     }
